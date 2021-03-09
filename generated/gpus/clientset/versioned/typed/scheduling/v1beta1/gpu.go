@@ -32,7 +32,7 @@ import (
 // GPUsGetter has a method to return a GPUInterface.
 // A group's client should implement this interface.
 type GPUsGetter interface {
-	GPUs(namespace string) GPUInterface
+	GPUs() GPUInterface
 }
 
 // GPUInterface has methods to work with GPU resources.
@@ -52,14 +52,12 @@ type GPUInterface interface {
 // gPUs implements GPUInterface
 type gPUs struct {
 	client rest.Interface
-	ns     string
 }
 
 // newGPUs returns a GPUs
-func newGPUs(c *SchedulingV1beta1Client, namespace string) *gPUs {
+func newGPUs(c *SchedulingV1beta1Client) *gPUs {
 	return &gPUs{
 		client: c.RESTClient(),
-		ns:     namespace,
 	}
 }
 
@@ -67,7 +65,6 @@ func newGPUs(c *SchedulingV1beta1Client, namespace string) *gPUs {
 func (c *gPUs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1beta1.GPU, err error) {
 	result = &v1beta1.GPU{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("gpus").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -84,7 +81,6 @@ func (c *gPUs) List(ctx context.Context, opts v1.ListOptions) (result *v1beta1.G
 	}
 	result = &v1beta1.GPUList{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("gpus").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -101,7 +97,6 @@ func (c *gPUs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface,
 	}
 	opts.Watch = true
 	return c.client.Get().
-		Namespace(c.ns).
 		Resource("gpus").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -112,7 +107,6 @@ func (c *gPUs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface,
 func (c *gPUs) Create(ctx context.Context, gPU *v1beta1.GPU, opts v1.CreateOptions) (result *v1beta1.GPU, err error) {
 	result = &v1beta1.GPU{}
 	err = c.client.Post().
-		Namespace(c.ns).
 		Resource("gpus").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(gPU).
@@ -125,7 +119,6 @@ func (c *gPUs) Create(ctx context.Context, gPU *v1beta1.GPU, opts v1.CreateOptio
 func (c *gPUs) Update(ctx context.Context, gPU *v1beta1.GPU, opts v1.UpdateOptions) (result *v1beta1.GPU, err error) {
 	result = &v1beta1.GPU{}
 	err = c.client.Put().
-		Namespace(c.ns).
 		Resource("gpus").
 		Name(gPU.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
@@ -140,7 +133,6 @@ func (c *gPUs) Update(ctx context.Context, gPU *v1beta1.GPU, opts v1.UpdateOptio
 func (c *gPUs) UpdateStatus(ctx context.Context, gPU *v1beta1.GPU, opts v1.UpdateOptions) (result *v1beta1.GPU, err error) {
 	result = &v1beta1.GPU{}
 	err = c.client.Put().
-		Namespace(c.ns).
 		Resource("gpus").
 		Name(gPU.Name).
 		SubResource("status").
@@ -154,7 +146,6 @@ func (c *gPUs) UpdateStatus(ctx context.Context, gPU *v1beta1.GPU, opts v1.Updat
 // Delete takes name of the gPU and deletes it. Returns an error if one occurs.
 func (c *gPUs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("gpus").
 		Name(name).
 		Body(&opts).
@@ -169,7 +160,6 @@ func (c *gPUs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, list
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("gpus").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -182,7 +172,6 @@ func (c *gPUs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, list
 func (c *gPUs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1beta1.GPU, err error) {
 	result = &v1beta1.GPU{}
 	err = c.client.Patch(pt).
-		Namespace(c.ns).
 		Resource("gpus").
 		Name(name).
 		SubResource(subresources...).

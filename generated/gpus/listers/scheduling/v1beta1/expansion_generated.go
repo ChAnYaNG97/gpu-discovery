@@ -20,7 +20,3 @@ package v1beta1
 // GPUListerExpansion allows custom methods to be added to
 // GPULister.
 type GPUListerExpansion interface{}
-
-// GPUNamespaceListerExpansion allows custom methods to be added to
-// GPUNamespaceLister.
-type GPUNamespaceListerExpansion interface{}

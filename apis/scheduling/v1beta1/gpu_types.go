@@ -51,6 +51,7 @@ type GPUStatus struct {
 }
 
 // +genclient
+// +genclient:nonNamespaced
 // +kubebuilder:object:root=true
 // +kubebuilder:printcolumn:name="node",type="string",JSONPath=".spec.node",description="NODE"
 // +kubebuilder:printcolumn:name="model",type="string",JSONPath=".spec.model",description="MODEL"

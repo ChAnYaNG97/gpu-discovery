@@ -40,5 +40,5 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 
 // GPUs returns a GPUInformer.
 func (v *version) GPUs() GPUInformer {
-	return &gPUInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	return &gPUInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

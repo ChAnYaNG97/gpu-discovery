@@ -31,8 +31,9 @@ type GPULister interface {
 	// List lists all GPUs in the indexer.
 	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v1beta1.GPU, err error)
-	// GPUs returns an object that can list and get GPUs.
-	GPUs(namespace string) GPUNamespaceLister
+	// Get retrieves the GPU from the index for a given name.
+	// Objects returned here must be treated as read-only.
+	Get(name string) (*v1beta1.GPU, error)
 	GPUListerExpansion
 }
 
@@ -54,41 +55,9 @@ func (s *gPULister) List(selector labels.Selector) (ret []*v1beta1.GPU, err erro
 	return ret, err
 }
 
-// GPUs returns an object that can list and get GPUs.
-func (s *gPULister) GPUs(namespace string) GPUNamespaceLister {
-	return gPUNamespaceLister{indexer: s.indexer, namespace: namespace}
-}
-
-// GPUNamespaceLister helps list and get GPUs.
-// All objects returned here must be treated as read-only.
-type GPUNamespaceLister interface {
-	// List lists all GPUs in the indexer for a given namespace.
-	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1beta1.GPU, err error)
-	// Get retrieves the GPU from the indexer for a given namespace and name.
-	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1beta1.GPU, error)
-	GPUNamespaceListerExpansion
-}
-
-// gPUNamespaceLister implements the GPUNamespaceLister
-// interface.
-type gPUNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all GPUs in the indexer for a given namespace.
-func (s gPUNamespaceLister) List(selector labels.Selector) (ret []*v1beta1.GPU, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1beta1.GPU))
-	})
-	return ret, err
-}
-
-// Get retrieves the GPU from the indexer for a given namespace and name.
-func (s gPUNamespaceLister) Get(name string) (*v1beta1.GPU, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
+// Get retrieves the GPU from the index for a given name.
+func (s *gPULister) Get(name string) (*v1beta1.GPU, error) {
+	obj, exists, err := s.indexer.GetByKey(name)
 	if err != nil {
 		return nil, err
 	}

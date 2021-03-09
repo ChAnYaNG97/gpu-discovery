@@ -32,7 +32,6 @@ import (
 // FakeGPUs implements GPUInterface
 type FakeGPUs struct {
 	Fake *FakeSchedulingV1beta1
-	ns   string
 }
 
 var gpusResource = schema.GroupVersionResource{Group: "scheduling.volcano.sh", Version: "v1beta1", Resource: "gpus"}
@@ -42,8 +41,7 @@ var gpusKind = schema.GroupVersionKind{Group: "scheduling.volcano.sh", Version: 
 // Get takes name of the gPU, and returns the corresponding gPU object, and an error if there is any.
 func (c *FakeGPUs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1beta1.GPU, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(gpusResource, c.ns, name), &v1beta1.GPU{})
-
+		Invokes(testing.NewRootGetAction(gpusResource, name), &v1beta1.GPU{})
 	if obj == nil {
 		return nil, err
 	}
@@ -53,8 +51,7 @@ func (c *FakeGPUs) Get(ctx context.Context, name string, options v1.GetOptions) 
 // List takes label and field selectors, and returns the list of GPUs that match those selectors.
 func (c *FakeGPUs) List(ctx context.Context, opts v1.ListOptions) (result *v1beta1.GPUList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(gpusResource, gpusKind, c.ns, opts), &v1beta1.GPUList{})
-
+		Invokes(testing.NewRootListAction(gpusResource, gpusKind, opts), &v1beta1.GPUList{})
 	if obj == nil {
 		return nil, err
 	}
@@ -75,15 +72,13 @@ func (c *FakeGPUs) List(ctx context.Context, opts v1.ListOptions) (result *v1bet
 // Watch returns a watch.Interface that watches the requested gPUs.
 func (c *FakeGPUs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(gpusResource, c.ns, opts))
-
+		InvokesWatch(testing.NewRootWatchAction(gpusResource, opts))
 }
 
 // Create takes the representation of a gPU and creates it.  Returns the server's representation of the gPU, and an error, if there is any.
 func (c *FakeGPUs) Create(ctx context.Context, gPU *v1beta1.GPU, opts v1.CreateOptions) (result *v1beta1.GPU, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(gpusResource, c.ns, gPU), &v1beta1.GPU{})
-
+		Invokes(testing.NewRootCreateAction(gpusResource, gPU), &v1beta1.GPU{})
 	if obj == nil {
 		return nil, err
 	}
@@ -93,8 +88,7 @@ func (c *FakeGPUs) Create(ctx context.Context, gPU *v1beta1.GPU, opts v1.CreateO
 // Update takes the representation of a gPU and updates it. Returns the server's representation of the gPU, and an error, if there is any.
 func (c *FakeGPUs) Update(ctx context.Context, gPU *v1beta1.GPU, opts v1.UpdateOptions) (result *v1beta1.GPU, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(gpusResource, c.ns, gPU), &v1beta1.GPU{})
-
+		Invokes(testing.NewRootUpdateAction(gpusResource, gPU), &v1beta1.GPU{})
 	if obj == nil {
 		return nil, err
 	}
@@ -105,8 +99,7 @@ func (c *FakeGPUs) Update(ctx context.Context, gPU *v1beta1.GPU, opts v1.UpdateO
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 func (c *FakeGPUs) UpdateStatus(ctx context.Context, gPU *v1beta1.GPU, opts v1.UpdateOptions) (*v1beta1.GPU, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(gpusResource, "status", c.ns, gPU), &v1beta1.GPU{})
-
+		Invokes(testing.NewRootUpdateSubresourceAction(gpusResource, "status", gPU), &v1beta1.GPU{})
 	if obj == nil {
 		return nil, err
 	}
@@ -116,14 +109,13 @@ func (c *FakeGPUs) UpdateStatus(ctx context.Context, gPU *v1beta1.GPU, opts v1.U
 // Delete takes name of the gPU and deletes it. Returns an error if one occurs.
 func (c *FakeGPUs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(gpusResource, c.ns, name), &v1beta1.GPU{})
-
+		Invokes(testing.NewRootDeleteAction(gpusResource, name), &v1beta1.GPU{})
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeGPUs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(gpusResource, c.ns, listOpts)
+	action := testing.NewRootDeleteCollectionAction(gpusResource, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1beta1.GPUList{})
 	return err
@@ -132,8 +124,7 @@ func (c *FakeGPUs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, 
 // Patch applies the patch and returns the patched gPU.
 func (c *FakeGPUs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1beta1.GPU, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(gpusResource, c.ns, name, pt, data, subresources...), &v1beta1.GPU{})
-
+		Invokes(testing.NewRootPatchSubresourceAction(gpusResource, name, pt, data, subresources...), &v1beta1.GPU{})
 	if obj == nil {
 		return nil, err
 	}

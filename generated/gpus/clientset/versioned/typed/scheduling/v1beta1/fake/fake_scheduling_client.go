@@ -28,8 +28,8 @@ type FakeSchedulingV1beta1 struct {
 	*testing.Fake
 }
 
-func (c *FakeSchedulingV1beta1) GPUs(namespace string) v1beta1.GPUInterface {
-	return &FakeGPUs{c, namespace}
+func (c *FakeSchedulingV1beta1) GPUs() v1beta1.GPUInterface {
+	return &FakeGPUs{c}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

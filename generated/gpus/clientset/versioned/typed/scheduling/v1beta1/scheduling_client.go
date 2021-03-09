@@ -34,8 +34,8 @@ type SchedulingV1beta1Client struct {
 	restClient rest.Interface
 }
 
-func (c *SchedulingV1beta1Client) GPUs(namespace string) GPUInterface {
-	return newGPUs(c, namespace)
+func (c *SchedulingV1beta1Client) GPUs() GPUInterface {
+	return newGPUs(c)
 }
 
 // NewForConfig creates a new SchedulingV1beta1Client for the given config.

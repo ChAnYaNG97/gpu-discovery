@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"flag"
+	"fmt"
 	"github.com/NVIDIA/gpu-monitoring-tools/bindings/go/nvml"
 	"gpu-discovery/apis/scheduling/v1beta1"
 	"gpu-discovery/generated/gpus/clientset/versioned"
@@ -9,9 +11,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/klog"
 	"log"
-	"fmt"
 	"os"
-	"context"
 )
 
 var (
@@ -31,7 +31,7 @@ func main() {
 		klog.Errorf("Failed to create gpu client, %s", err)
 	}
 
-	gpuManager := gpuClient.SchedulingV1beta1().GPUs("default")
+	gpuManager := gpuClient.SchedulingV1beta1().GPUs()
 
 	log.Println("Loading NVML")
 	if err := nvml.Init(); err != nil {
