@@ -1,0 +1,8 @@
+domain: volcano.sh
+multigroup: true
+repo: gpu-discovery
+resources:
+- group: scheduling
+  kind: GPU
+  version: v1beta1
+version: "2"

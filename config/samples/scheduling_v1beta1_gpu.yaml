@@ -1,0 +1,7 @@
+apiVersion: scheduling.volcano.sh/v1beta1
+kind: GPU
+metadata:
+  name: gpu-sample
+spec:
+  # Add fields here
+  foo: bar
